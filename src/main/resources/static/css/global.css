@@ -1,0 +1,42 @@
+body *, div {
+    font-family: monospace;
+}
+
+input[type=text], input[type=password] {
+    border: 0 solid #AAAAAA;
+    border-bottom-width: 1px;
+}
+
+.titled-pane {
+    display: inline-block;
+    max-width: 50em;
+    border: 1px solid #CCC;
+    margin: 1em;
+}
+
+.titled-pane .message {
+    border-top: 1px solid #CCCCCC;
+    color: #AA0000;
+}
+
+.titled-pane .title, .titled-pane .body, .titled-pane .footer, .titled-pane .message {
+    padding: 0.5em 1em;
+}
+
+.titled-pane .title {
+    border-bottom: 1px solid #CCC;
+    background: #EEE;
+}
+
+.titled-pane .footer {
+    border-top: 1px solid #CCC;
+}
+
+.form-field {
+    line-height: 2em;
+}
+
+.form-field .field-label {
+    display: inline-block;
+    min-width: 5em;
+}

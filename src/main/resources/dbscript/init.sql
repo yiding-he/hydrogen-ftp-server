@@ -1,7 +1,24 @@
+CREATE TABLE IF NOT EXISTS dict (
+  dict_key   VARCHAR(50) PRIMARY KEY,
+  dict_value VARCHAR(100)
+);
+
 CREATE TABLE IF NOT EXISTS ftp_user (
-  id int,
-  username VARCHAR (30),
-  password VARCHAR(30),
-  disabled int DEFAULT 0
+  id           INT PRIMARY KEY,
+  username     VARCHAR(30) UNIQUE,
+  display_name VARCHAR(30),
+  password     VARCHAR(30),
+  disabled     INT DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS ftp_group (
+  id         INT PRIMARY KEY,
+  group_name VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS ftp_user_group (
+  user_id  INT,
+  group_id INT,
+  PRIMARY KEY (user_id, group_id)
 );
 

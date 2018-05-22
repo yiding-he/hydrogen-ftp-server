@@ -23,10 +23,13 @@
             <#if users??>
                 <#list users as user>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>${user.username}</td>
+                    <td>${user.displayName}</td>
+                    <td>${user.groups}</td>
+                    <td>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </td>
                 </tr>
                 </#list>
             </#if>

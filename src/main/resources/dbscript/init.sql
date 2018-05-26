@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS dict (
 );
 
 CREATE TABLE IF NOT EXISTS ftp_user (
-  id           INT PRIMARY KEY,
+  id           BIGINT PRIMARY KEY,
   username     VARCHAR(30) UNIQUE,
   display_name VARCHAR(30),
   password     VARCHAR(30),
@@ -16,13 +16,13 @@ CREATE TABLE IF NOT EXISTS ftp_user (
 );
 
 CREATE TABLE IF NOT EXISTS ftp_group (
-  id         INT PRIMARY KEY,
+  id         BIGINT PRIMARY KEY,
   group_name VARCHAR(30)
 );
 
 CREATE TABLE IF NOT EXISTS ftp_user_group (
-  user_id  INT,
-  group_id INT,
+  user_id  BIGINT,
+  group_id BIGINT,
   PRIMARY KEY (user_id, group_id)
 );
 

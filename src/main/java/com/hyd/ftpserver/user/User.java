@@ -17,6 +17,15 @@ public class User {
 
     private Integer disabled;
 
+    public User() {
+    }
+
+    public User(String username, String displayName, String password) {
+        this.username = username;
+        this.displayName = displayName;
+        this.password = password;
+    }
+
     public String getDisplayName() {
         return displayName;
     }

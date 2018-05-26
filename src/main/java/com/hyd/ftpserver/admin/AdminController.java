@@ -1,6 +1,7 @@
 package com.hyd.ftpserver.admin;
 
 import com.hyd.ftpserver.ftpserver.FtpServerService;
+import com.hyd.ftpserver.user.User;
 import com.hyd.ftpserver.user.UserService;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.slf4j.Logger;
@@ -109,7 +110,23 @@ public class AdminController {
     @PostMapping("/add_user")
     public ModelAndView addUser(String username, String displayName, String password) {
         return ifLoggedInThenReturn(() -> {
-            return new ModelAndView("/admin/main"); // not implemented yet
+            User user = new User(username, displayName, password);
+            userService.addUser(user);
+            return new ModelAndView("redirect:/admin/main");
+        });
+    }
+
+    @GetMapping("edit_user")
+    public ModelAndView editUserPage(Long userId) {
+        return ifLoggedInThenReturn(() -> new ModelAndView("/admin/add_user")
+                .addObject("user", userService.queryUserById(userId)));
+    }
+
+    @PostMapping("edit_user")
+    public ModelAndView editUser(User user) {
+        return ifLoggedInThenReturn(() -> {
+            userService.updateUser(user);
+            return new ModelAndView("redirect:/admin/main");
         });
     }
 }

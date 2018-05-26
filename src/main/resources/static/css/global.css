@@ -1,5 +1,5 @@
 body *, div {
-    font-family: monospace;
+    font-family: 'Courier New', monospace;
 }
 
 input[type=text], input[type=password] {
@@ -39,4 +39,21 @@ input[type=text], input[type=password] {
 .form-field .field-label {
     display: inline-block;
     min-width: 5em;
+}
+
+table.datatable {
+    border-collapse: collapse;
+}
+
+table.datatable, table.datatable td {
+    border: 1px solid #CCCCCC;
+}
+
+table.datatable td {
+    padding: 0.3em;
+}
+
+table.datatable thead td {
+    text-align: center;
+    font-weight: bold;
 }

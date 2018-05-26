@@ -9,17 +9,28 @@
     <title>Hydrogen FTP Server Management</title>
 </head>
 <body>
-<form action="add_user" method="post">
+
+<#assign title = 'Add User'>
+<#assign action = 'add_user'>
+<#if user??>
+    <#assign title = 'Edit User'>
+    <#assign action = 'edit_user'>
+</#if>
+
+<form action="${action}" method="post">
+    <#if user??>
+        <input type="hidden" name="id" value="${user.id?long?c}">
+    </#if>
     <div class="titled-pane">
-        <div class="title">Add User</div>
+        <div class="title">${title}</div>
         <div class="body">
             <div class="form-field">
                 <span class="field-label">User Name:</span>
-                <input type="text" name="username" id="username">
+                <input type="text" name="username" id="username" value="${user.username!}" <#if user??>readonly</#if>>
             </div>
             <div class="form-field">
                 <span class="field-label">Display Name:</span>
-                <input type="text" name="displayName" id="displayName">
+                <input type="text" name="displayName" id="displayName" value="${user.displayName!}">
             </div>
             <div class="form-field">
                 <span class="field-label">Password:</span>

@@ -12,12 +12,14 @@
 <div class="titled-pane">
     <div class="title">Users</div>
     <div class="body">
-        <table>
+        <table class="datatable">
             <thead>
-            <td>User Name</td>
-            <td>Display Name</td>
-            <td>Groups</td>
-            <td></td>
+            <tr>
+                <td>User Name</td>
+                <td>Display Name</td>
+                <td>Groups</td>
+                <td></td>
+            </tr>
             </thead>
             <tbody>
             <#if users??>
@@ -25,9 +27,9 @@
                 <tr>
                     <td>${user.username}</td>
                     <td>${user.displayName}</td>
-                    <td>${user.groups}</td>
+                    <td>${user.groups!!}</td>
                     <td>
-                        <button>Edit</button>
+                        <a href="edit_user?userId=${user.id?long?c}"><button>Edit</button></a>
                         <button>Delete</button>
                     </td>
                 </tr>

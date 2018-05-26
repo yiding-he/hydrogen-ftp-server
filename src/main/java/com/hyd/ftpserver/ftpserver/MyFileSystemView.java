@@ -1,14 +1,16 @@
 package com.hyd.ftpserver.ftpserver;
 
+import com.hyd.ftpserver.user.FtpUser;
+import com.hyd.ftpserver.user.Group;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ftpserver.ftplet.FileSystemView;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.FtpFile;
-import org.apache.ftpserver.ftplet.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author yiding.he
@@ -17,17 +19,27 @@ public class MyFileSystemView implements FileSystemView {
 
     private static final Logger LOG = LoggerFactory.getLogger(MyFileSystemView.class);
 
-    private User user;
+    private FtpUser ftpUser;
+
+    private List<Group> groups;
+
+    private FtpServerConfig ftpServerConfig;
 
     private String workingDirectory = "/";
 
-    public MyFileSystemView(User user) {
-        this.user = user;
+    public MyFileSystemView(
+            FtpUser ftpUser,
+            List<Group> groups,
+            FtpServerConfig ftpServerConfig) {
+
+        this.ftpUser = ftpUser;
+        this.groups = groups;
+        this.ftpServerConfig = ftpServerConfig;
     }
 
     @Override
     public FtpFile getHomeDirectory() throws FtpException {
-        return new MyHomeFtpFile(this.user);
+        return new MyHomeFtpFile(ftpServerConfig.getSavePath(), this.ftpUser, this.groups);
     }
 
     @Override
@@ -37,7 +49,11 @@ public class MyFileSystemView implements FileSystemView {
 
     @Override
     public boolean changeWorkingDirectory(String dir) throws FtpException {
-        this.workingDirectory = dir;
+        if (dir.startsWith("/")) {
+            this.workingDirectory = dir;
+        } else {
+            this.workingDirectory += "/" + dir;
+        }
         return true;
     }
 
@@ -82,7 +98,21 @@ public class MyFileSystemView implements FileSystemView {
 
     }
 
-    private NativeFtpFile getNativeFile(String directory) {
-        return new NativeFtpFile(directory, new File("target" + directory), user);
+    private NativeFtpFile getNativeFile(String path) {
+        return new NativeFtpFile(path, toFile(path), this.ftpUser.toUser());
+    }
+
+    private File toFile(String path) {
+
+        String category = path.startsWith("/我的文档") ? "users" : "groups";
+
+        path = path.replaceFirst("/我的文档", "/" + ftpUser.getId());
+        for (Group group : groups) {
+            path = path.replaceFirst("/" + group.getGroupName(), "/" + group.getId());
+        }
+
+        File file = new File(new File(ftpServerConfig.getSavePath(), category), path);
+        LOG.info("actual file: " + file.getPath());
+        return file;
     }
 }

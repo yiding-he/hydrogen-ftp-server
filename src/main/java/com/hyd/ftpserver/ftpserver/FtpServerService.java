@@ -1,5 +1,7 @@
 package com.hyd.ftpserver.ftpserver;
 
+import com.hyd.ftpserver.user.GroupService;
+import com.hyd.ftpserver.user.UserService;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.ftpserver.FtpServer;
@@ -26,9 +28,16 @@ public class FtpServerService {
     @Autowired
     private MyUserManager myUserManager;
 
-    private FtpServer ftpServer;
+    @Autowired
+    private FtpServerConfig ftpServerConfig;
 
-    private int port = 2121;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
+
+    private FtpServer ftpServer;
 
     @PostConstruct
     public void init() throws Exception {
@@ -55,19 +64,20 @@ public class FtpServerService {
 
         this.ftpServer = createFtpServer();
         this.ftpServer.start();
-        LOG.info("FTP server started at port " + port);
+        LOG.info("FTP server started at port " + ftpServerConfig.getPort());
     }
 
     private FtpServer createFtpServer() {
         ListenerFactory listener = new ListenerFactory();
-        listener.setPort(port);
+        listener.setServerAddress(ftpServerConfig.getAddress());
+        listener.setPort(ftpServerConfig.getPort());
         listener.setDataConnectionConfiguration(
                 new DataConnectionConfigurationFactory().createDataConnectionConfiguration());
 
         ConnectionConfigFactory connection = new ConnectionConfigFactory();
         connection.setMaxLoginFailures(10);
         connection.setLoginFailureDelay(100);
-        connection.setAnonymousLoginEnabled(true);
+        connection.setAnonymousLoginEnabled(false);
 
         FtpServerFactory serverFactory = new FtpServerFactory();
         serverFactory.setUserManager(createUserManager());
@@ -83,6 +93,6 @@ public class FtpServerService {
     }
 
     private FileSystemFactory createFileSystem() {
-        return new MyFileSystemFactory();
+        return new MyFileSystemFactory(userService, groupService, ftpServerConfig);
     }
 }

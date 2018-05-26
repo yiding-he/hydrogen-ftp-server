@@ -1,9 +1,13 @@
 package com.hyd.ftpserver.user;
 
 import com.hyd.dao.DAO;
+import com.hyd.ftpserver.ftpserver.FtpServerConfig;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -15,6 +19,9 @@ public class GroupService {
     @Autowired
     private DAO dao;
 
+    @Autowired
+    FtpServerConfig ftpServerConfig;
+
     public void createGroup(String groupName, String[] userIds) {
         long groupId = System.currentTimeMillis();
         String sql = "insert into ftp_group(id, group_name) values(?,?)";
@@ -22,7 +29,18 @@ public class GroupService {
         DAO.runTransaction(() -> {
             dao.execute(sql, groupId, groupName);
             addUsersToGroup(userIds, groupId);
+
+            createGroupDir(groupId);
         });
+    }
+
+    private void createGroupDir(long groupId) {
+        try {
+            File groupDirectory = new File(ftpServerConfig.getSavePath(), "groups/" + groupId);
+            FileUtils.forceMkdir(groupDirectory);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void addUsersToGroup(String[] userIds, long groupId) {
@@ -55,5 +73,10 @@ public class GroupService {
             dao.execute("delete from ftp_group where id=?", groupId);
             dao.execute("delete from ftp_user_group where group_id=?", groupId);
         });
+    }
+
+    public List<Group> queryGroupsByUser(Long userId) {
+        return dao.query(Group.class, "select * from ftp_group where id in(" +
+                "select group_id from ftp_user_group where user_id=?)", userId);
     }
 }

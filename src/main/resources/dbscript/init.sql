@@ -1,3 +1,7 @@
+-- Database initialization script.
+-- If any error occurs when executing this script,
+-- please update and reinstall dependency 'hydrogen-dao'.
+
 CREATE TABLE IF NOT EXISTS dict (
   dict_key   VARCHAR(50) PRIMARY KEY,
   dict_value VARCHAR(100)

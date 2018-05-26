@@ -1,6 +1,10 @@
 package com.hyd.ftpserver.admin;
 
+import com.hyd.ftpserver.ftpserver.FtpServerService;
 import com.hyd.ftpserver.user.UserService;
+import org.apache.ftpserver.ftplet.FtpException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +23,8 @@ import java.util.function.Supplier;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
+
     private static final ModelAndView LOGIN = new ModelAndView("redirect:/admin/index");
 
     @Autowired
@@ -26,6 +32,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FtpServerService ftpServerService;
 
     private boolean loggedIn;
 
@@ -68,7 +77,28 @@ public class AdminController {
     public ModelAndView main() {
         return ifLoggedInThenReturn(() ->
                 new ModelAndView("/admin/main")
-                        .addObject("users", userService.queryAllUsers()));
+                        .addObject("users", userService.queryAllUsers())
+                        .addObject("server_running", ftpServerService.isServerRunning())
+        );
+    }
+
+    @PostMapping("/server_action")
+    public ModelAndView serverAction(String action) {
+
+        return ifLoggedInThenReturn(() -> {
+
+            try {
+                if (action.equals("start")) {
+                    ftpServerService.start();
+                } else if (action.equals("stop")) {
+                    ftpServerService.stop();
+                }
+            } catch (FtpException e) {
+                LOG.error("", e);
+            }
+
+            return new ModelAndView("redirect:/admin/main");
+        });
     }
 
     @GetMapping("/add_user")

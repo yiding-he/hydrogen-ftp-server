@@ -57,3 +57,12 @@ table.datatable thead td {
     text-align: center;
     font-weight: bold;
 }
+
+div.checkbox-group {
+    border: 1px solid #DDDDDD;
+    padding: 0.2em;
+    display: inline-block;
+    width: 20em;
+    overflow: auto;
+    max-height: 10em;
+}

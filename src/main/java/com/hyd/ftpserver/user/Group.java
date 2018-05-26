@@ -25,6 +25,18 @@ public class Group {
         this.groupName = groupName;
     }
 
+    ///////////////////////////////////////////////
+
+    private int userCount;
+
+    public int getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(int userCount) {
+        this.userCount = userCount;
+    }
+
     @Override
     public String toString() {
         return this.groupName;

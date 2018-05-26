@@ -7,7 +7,6 @@ import org.apache.ftpserver.usermanager.impl.TransferRatePermission;
 import org.apache.ftpserver.usermanager.impl.WritePermission;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author yidin
@@ -75,14 +74,24 @@ public class FtpUser {
 
     ///////////////////////////////////////////////
 
-    private List<Group> groups;
+    private String groupNames;
 
-    public List<Group> getGroups() {
-        return groups;
+    private boolean selected;
+
+    public String getGroupNames() {
+        return groupNames;
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
+    public void setGroupNames(String groupNames) {
+        this.groupNames = groupNames;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     ////////////////////////////////////////////////////////////////////////////////

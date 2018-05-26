@@ -2,6 +2,8 @@ package com.hyd.ftpserver.admin;
 
 import com.hyd.ftpserver.ftpserver.FtpServerService;
 import com.hyd.ftpserver.user.FtpUser;
+import com.hyd.ftpserver.user.Group;
+import com.hyd.ftpserver.user.GroupService;
 import com.hyd.ftpserver.user.UserService;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -33,6 +36,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
 
     @Autowired
     private FtpServerService ftpServerService;
@@ -76,10 +82,13 @@ public class AdminController {
 
     @GetMapping("/main")
     public ModelAndView main() {
-        return ifLoggedInThenReturn(() ->
-                new ModelAndView("/admin/main")
-                        .addObject("users", userService.queryAllUsers())
-                        .addObject("server_running", ftpServerService.isServerRunning())
+        return ifLoggedInThenReturn(() -> {
+                    ModelAndView modelAndView = new ModelAndView("/admin/main");
+                    modelAndView.addObject("users", userService.queryAllUsers());
+                    modelAndView.addObject("groups", groupService.queryAllGroups());
+                    modelAndView.addObject("server_running", ftpServerService.isServerRunning());
+                    return modelAndView;
+                }
         );
     }
 
@@ -118,14 +127,67 @@ public class AdminController {
 
     @GetMapping("edit_user")
     public ModelAndView editUserPage(Long userId) {
-        return ifLoggedInThenReturn(() -> new ModelAndView("/admin/add_user")
-                .addObject("user", userService.queryUserById(userId)));
+        return ifLoggedInThenReturn(() -> {
+            FtpUser ftpUser = userService.queryUserById(userId);
+            return new ModelAndView("/admin/add_user").addObject("user", ftpUser);
+        });
     }
 
     @PostMapping("edit_user")
     public ModelAndView editUser(FtpUser ftpUser) {
         return ifLoggedInThenReturn(() -> {
             userService.updateUser(ftpUser);
+            return new ModelAndView("redirect:/admin/main");
+        });
+    }
+
+    @PostMapping("delete_user")
+    public ModelAndView deleteUser(String userId) {
+        return ifLoggedInThenReturn(() -> {
+            userService.deleteUser(userId);
+            return new ModelAndView("redirect:/admin/main");
+        });
+    }
+
+    @GetMapping("add_group")
+    public ModelAndView addGroupPage() {
+        return ifLoggedInThenReturn(() ->
+                new ModelAndView("/admin/add_group")
+                        .addObject("users", userService.queryAllUsers()));
+    }
+
+    @PostMapping("add_group")
+    public ModelAndView addGroup(String groupName, String[] userId) {
+        return ifLoggedInThenReturn(() -> {
+            groupService.createGroup(groupName, userId);
+            return new ModelAndView("redirect:/admin/main");
+        });
+    }
+
+    @GetMapping("edit_group")
+    public ModelAndView editGroupPage(Long groupId) {
+        return ifLoggedInThenReturn(() -> {
+            Group group = groupService.queryGroupById(groupId);
+            List<FtpUser> users = userService.queryAllUsersWithGroup(groupId);
+
+            return new ModelAndView("/admin/add_group")
+                    .addObject("users", users)
+                    .addObject("group", group);
+        });
+    }
+
+    @PostMapping("edit_group")
+    public ModelAndView editGroup(Long groupId, String groupName, String[] userId) {
+        return ifLoggedInThenReturn(() -> {
+            groupService.updateGroup(groupId, groupName, userId);
+            return new ModelAndView("redirect:/admin/main");
+        });
+    }
+
+    @PostMapping("delete_group")
+    public ModelAndView deleteGroup(Long groupId) {
+        return ifLoggedInThenReturn(() -> {
+            groupService.deleteGroup(groupId);
             return new ModelAndView("redirect:/admin/main");
         });
     }

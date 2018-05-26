@@ -12,25 +12,26 @@
 
 <#assign title = 'Add User'>
 <#assign action = 'add_user'>
-<#if ftpUser??>
+<#if user??>
     <#assign title = 'Edit User'>
     <#assign action = 'edit_user'>
 </#if>
 
 <form action="${action}" method="post">
-    <#if ftpUser??>
-        <input type="hidden" name="id" value="${ftpUser.id?long?c}">
+    <#if user??>
+        <input type="hidden" name="id" value="${user.id?long?c}">
     </#if>
     <div class="titled-pane">
         <div class="title">${title}</div>
         <div class="body">
             <div class="form-field">
                 <span class="field-label">User Name:</span>
-                <input type="text" name="username" id="username" value="${(ftpUser.username)!}" <#if ftpUser??>readonly</#if>>
+                <input type="text" name="username" id="username"
+                       value="${(user.username)!}" <#if user??>readonly</#if>>
             </div>
             <div class="form-field">
                 <span class="field-label">Display Name:</span>
-                <input type="text" name="displayName" id="displayName" value="${(ftpUser.displayName)!}">
+                <input type="text" name="displayName" id="displayName" value="${(user.displayName)!}">
             </div>
             <div class="form-field">
                 <span class="field-label">Password:</span>
@@ -39,6 +40,7 @@
         </div>
         <div class="footer">
             <button type="submit">Save</button>
+            <button onclick="window.history.back();return false;">Back</button>
         </div>
     </div>
 </form>

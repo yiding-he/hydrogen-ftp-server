@@ -17,7 +17,21 @@ public class UserService {
     private DAO dao;
 
     public List<FtpUser> queryAllUsers() {
-        return dao.query(FtpUser.class, "select * from ftp_user");
+        return dao.query(FtpUser.class, "select " +
+                "    u.*, GROUP_CONCAT(gg.group_name SEPARATOR ', ') as group_names" +
+                " from ftp_user u left join (" +
+                "    select ug.user_id, g.group_name " +
+                "    from ftp_user_group ug, ftp_group g where ug.group_id=g.id" +
+                " ) gg on u.id=gg.user_id" +
+                " group by u.id");
+    }
+
+    public List<FtpUser> queryAllUsersWithGroup(Long groupId) {
+        return dao.query(FtpUser.class, "select u.*," +
+                " case when ug.group_id=? then 'true' else 'false' end as selected" +
+                " from ftp_user u " +
+                " left join ftp_user_group ug on u.id=ug.user_id" +
+                " and ug.group_id=?", groupId, groupId);
     }
 
     public void addUser(FtpUser ftpUser) {
@@ -42,5 +56,9 @@ public class UserService {
                 .Set("display_name=?", ftpUser.getDisplayName())
                 .SetIfNotEmpty("password=?", ftpUser.getPassword())
                 .Where("id=?", ftpUser.getId()));
+    }
+
+    public void deleteUser(String userId) {
+        dao.execute("delete from ftp_user where id=?", Long.parseLong(userId));
     }
 }

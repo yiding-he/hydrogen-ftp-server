@@ -16,27 +16,31 @@ public class UserService {
     @Autowired
     private DAO dao;
 
-    public List<User> queryAllUsers() {
-        return dao.query(User.class, "select * from ftp_user");
+    public List<FtpUser> queryAllUsers() {
+        return dao.query(FtpUser.class, "select * from ftp_user");
     }
 
-    public void addUser(User user) {
-        user.setId(System.currentTimeMillis());
-        dao.insert(user, "ftp_user");
+    public void addUser(FtpUser ftpUser) {
+        ftpUser.setId(System.currentTimeMillis());
+        dao.insert(ftpUser, "ftp_user");
     }
 
-    public User queryUserById(Long userId) {
-        return dao.find(User.class, "ftp_user", userId);
+    public FtpUser queryUserById(Long userId) {
+        return dao.find(FtpUser.class, "ftp_user", userId);
     }
 
-    public void updateUser(User user) {
-        if (user.getId() == null) {
+    public FtpUser queryUserByName(String username) {
+        return dao.queryFirst(FtpUser.class, "select * from ftp_user where username=?", username);
+    }
+
+    public void updateUser(FtpUser ftpUser) {
+        if (ftpUser.getId() == null) {
             return;
         }
 
         dao.execute(SQL.Update("ftp_user")
-                .Set("display_name=?", user.getDisplayName())
-                .SetIfNotEmpty("password=?", user.getPassword())
-                .Where("id=?", user.getId()));
+                .Set("display_name=?", ftpUser.getDisplayName())
+                .SetIfNotEmpty("password=?", ftpUser.getPassword())
+                .Where("id=?", ftpUser.getId()));
     }
 }

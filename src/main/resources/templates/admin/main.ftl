@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, ftpUser-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../css/global.css">
     <title>Hydrogen FTP Server Management</title>
@@ -23,13 +23,13 @@
             </thead>
             <tbody>
             <#if users??>
-                <#list users as user>
+                <#list users as ftpUser>
                 <tr>
-                    <td>${user.username}</td>
-                    <td>${user.displayName}</td>
-                    <td>${user.groups!!}</td>
+                    <td>${ftpUser.username}</td>
+                    <td>${ftpUser.displayName}</td>
+                    <td>${ftpUser.groups!!}</td>
                     <td>
-                        <a href="edit_user?userId=${user.id?long?c}"><button>Edit</button></a>
+                        <a href="edit_user?userId=${ftpUser.id?long?c}"><button>Edit</button></a>
                         <button>Delete</button>
                     </td>
                 </tr>

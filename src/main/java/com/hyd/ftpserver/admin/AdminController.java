@@ -1,7 +1,7 @@
 package com.hyd.ftpserver.admin;
 
 import com.hyd.ftpserver.ftpserver.FtpServerService;
-import com.hyd.ftpserver.user.User;
+import com.hyd.ftpserver.user.FtpUser;
 import com.hyd.ftpserver.user.UserService;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.slf4j.Logger;
@@ -110,8 +110,8 @@ public class AdminController {
     @PostMapping("/add_user")
     public ModelAndView addUser(String username, String displayName, String password) {
         return ifLoggedInThenReturn(() -> {
-            User user = new User(username, displayName, password);
-            userService.addUser(user);
+            FtpUser ftpUser = new FtpUser(username, displayName, password);
+            userService.addUser(ftpUser);
             return new ModelAndView("redirect:/admin/main");
         });
     }
@@ -123,9 +123,9 @@ public class AdminController {
     }
 
     @PostMapping("edit_user")
-    public ModelAndView editUser(User user) {
+    public ModelAndView editUser(FtpUser ftpUser) {
         return ifLoggedInThenReturn(() -> {
-            userService.updateUser(user);
+            userService.updateUser(ftpUser);
             return new ModelAndView("redirect:/admin/main");
         });
     }

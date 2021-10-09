@@ -48,6 +48,10 @@ public class FtpServerService {
         return ftpServer != null && !ftpServer.isStopped();
     }
 
+    public FtpServerConfig getFtpServerConfig() {
+        return ftpServerConfig;
+    }
+
     public void stop() {
         if (!isServerRunning()) {
             return;

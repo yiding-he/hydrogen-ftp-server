@@ -1,7 +1,7 @@
 package com.hyd.ftpserver.infrastructure;
 
 import com.hyd.dao.DAO;
-import com.hyd.dao.util.ScriptExecutor;
+import com.hyd.dao.mate.util.ScriptExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

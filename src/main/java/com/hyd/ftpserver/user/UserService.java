@@ -36,7 +36,8 @@ public class UserService {
 
     public void addUser(FtpUser ftpUser) {
         ftpUser.setId(System.currentTimeMillis());
-        dao.insert(ftpUser, "ftp_user");
+        dao.execute("insert into ftp_user(id, username, display_name, password)values(?,?,?,?)",
+                ftpUser.getId(), ftpUser.getUsername(), ftpUser.getDisplayName(), ftpUser.getPassword());
     }
 
     public FtpUser queryUserById(Long userId) {

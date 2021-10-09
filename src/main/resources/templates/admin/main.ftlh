@@ -108,7 +108,7 @@
     <div class="title">Server</div>
     <div class="body">
         <#if server_running == true>
-            Server is running.
+            Server is running at port ${server_port?string["0"]}.
         <#else>
             Server is stopped.
         </#if>

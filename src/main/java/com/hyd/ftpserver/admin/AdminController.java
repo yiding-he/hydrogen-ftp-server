@@ -49,15 +49,6 @@ public class AdminController {
         return loggedIn ? supplier.get() : LOGIN;
     }
 
-    @RequestMapping("")
-    public String index0() {
-        if (loggedIn) {
-            return "redirect:/admin/main";
-        } else {
-            return "redirect:/admin/index";
-        }
-    }
-
     @RequestMapping({"/", "/index"})
     public String index() {
         if (loggedIn) {
@@ -87,6 +78,7 @@ public class AdminController {
                     modelAndView.addObject("users", userService.queryAllUsers());
                     modelAndView.addObject("groups", groupService.queryAllGroups());
                     modelAndView.addObject("server_running", ftpServerService.isServerRunning());
+                    modelAndView.addObject("server_port", ftpServerService.getFtpServerConfig().getPort());
                     return modelAndView;
                 }
         );

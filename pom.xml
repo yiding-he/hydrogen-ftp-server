@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.2.RELEASE</version>
+        <version>2.5.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -26,15 +26,11 @@
 
     <dependencies>
 
-        <!--
-        This dependency needs to be downloaded from
-        https://gitee.com/yidinghe/hydrogen-dao/tree/3.1.0/
-        I may move this project to github in the future.
-        -->
+        <!-- https://mvnrepository.com/artifact/com.github.yiding-he/spring-boot-starter-hydrogen-dao -->
         <dependency>
-            <groupId>com.hyd</groupId>
-            <artifactId>hydrogen-dao</artifactId>
-            <version>3.1.0-SNAPSHOT</version>
+            <groupId>com.github.yiding-he</groupId>
+            <artifactId>spring-boot-starter-hydrogen-dao</artifactId>
+            <version>3.5.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.ftpserver/ftpserver-core -->
@@ -48,7 +44,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>2.11.0</version>
         </dependency>
 
         <dependency>
